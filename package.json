@@ -1,0 +1,21 @@
+{
+  "name": "expresspythonapi",
+  "version": "1.0.0",
+  "description": "Run Python Script at Express JS API",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": ".git"
+  },
+  "keywords": [
+    "express",
+    "rest",
+    "api",
+    "python"
+  ],
+  "author": "Selim SEZER",
+  "license": "MIT"
+}
