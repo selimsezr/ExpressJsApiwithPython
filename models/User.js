@@ -1,5 +1,5 @@
 const mongoose = require("mongoose");
-
+const bcrypt = require("bcryptjs");
 const Schema = mongoose.Schema;
 
 const UserSchema = new Schema({
@@ -9,7 +9,7 @@ const UserSchema = new Schema({
   },
   email: {
     type: String,
-    required: [true,"Please provide a email address"],
+    required: [true, "Please provide a email address"],
     unique: [true, "Please try a different email address"],
     match: [
       /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/,
@@ -52,5 +52,18 @@ const UserSchema = new Schema({
     default: false,
   },
 });
-
+//Parola Hashleme
+UserSchema.pre("save", function (next) {
+  //parola Değişmemişse
+  if (!this.isModified("password")) {//isModified fonksiyonu mongoDB tarafından gelen bir özelliktir. Eğer değer değişmişse false döner 
+    bcrypt.genSalt(10, (err, salt) => {
+      if (err) next(err);
+      bcrypt.hash(this.password, salt, (err, hash) => {
+        if (err) next(err);
+        this.password = hash;
+        next();
+      });
+    });
+  }
+});
 module.exports = mongoose.model("User", UserSchema);
