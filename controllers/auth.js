@@ -4,13 +4,15 @@ const asyncErrorWrapper = require("express-async-handler");
 
 const register = asyncErrorWrapper(async (req, res, next) => {
   
-  const { name, email, password, role } = req.body;
+  const { name, email, password, role } = req.body;//ES7 ile birlikte name: name yazmamıza gerek kalmıyor
   const user = await User.create({
-    name,//ES7 ile birlikte name: name yazmamıza gerek kalmıyor
+    name,
     email,
     password,
     role
   });
+  const token = user.generateJwtFromUser();
+  console.log(token);
   res.status(200).json({
     success: true,
     data: user,
