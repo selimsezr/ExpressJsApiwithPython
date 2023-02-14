@@ -1,4 +1,6 @@
 const CustomError = require("../../helpers/error/CustomError");
+const asyncErrorWrapper = require("express-async-handler");
+const User = require("../../models/User");
 const jwt = require("jsonwebtoken");
 const {
   isTokenIncluded,
@@ -29,4 +31,14 @@ const getAccessToRoute = (req, res, next) => {
     next();
   });
 };
-module.exports = { getAccessToRoute };
+const getAdminAccess = asyncErrorWrapper(async (req, res, next) => {
+ const {id} = req.user;  
+
+ const user = await User.findById(id);
+
+ if(user.role !== "admin") {
+  return next(new CustomError("You are not authorized to access this route", 403));
+ }
+ next();
+});
+module.exports = { getAccessToRoute, getAdminAccess };
